@@ -17,12 +17,13 @@ class Article(BaseModel):
     content: str
 
     @classmethod
-    def get_by_id(cls, articlle_id: str):
+    def get_by_id(cls, article_id: str):
         con = sqlite3.connect(os.getenv("DATABASE_NAME", "database.db"))
         con.row_factory = sqlite3.Row
 
         cur = con.cursor()
-        cur.execute("SELECT * FROM articles WHERE id=?", (articlle_id,))
+        cur.execute("SELECT * FROM articles WHERE id=?", (article_id,))
+
         record = cur.fetchone()
 
         if record is None:
@@ -35,7 +36,7 @@ class Article(BaseModel):
 
     @classmethod
     def get_by_title(cls, title: str):
-        con = sqlite3.connect(os.getenv("DATABASE_NAME", "dtabase.db"))
+        con = sqlite3.connect(os.getenv("DATABASE_NAME", "database.db"))
         con.row_factory = sqlite3.Row
 
         cur = con.cursor()
@@ -66,12 +67,13 @@ class Article(BaseModel):
         return articles
 
     def save(self) -> "Article":
-        with sqlite3.connect(os.getenv("DTABASE", "database_db")) as con:
+        with sqlite3.connect(os.getenv("DATABASE_NAME", "database.db")) as con:
             cur = con.cursor()
             cur.execute(
-                "INSERT INTO articles (id, author, title, content) VALUES(?, ?, ?, ?)",
+                "INSERT INTO articles (id,author,title,content) VALUES(?, ?, ?, ?)",
                 (self.id, self.author, self.title, self.content),
             )
+            con.commit()
 
         return self
 
